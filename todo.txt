@@ -1,0 +1,4 @@
+-Board with coordinate system
+-Pieces and their respective movements
+-Capturing
+-Different colors

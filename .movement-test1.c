@@ -9,20 +9,24 @@ void InteractiveCheckMovementValidity()
 
   //Get piece info
   printf("Please enter a piece(p, N): ");
-  char p = getchar();
+  char p;
+  scanf("%c", &p);
   getchar();
 
   printf("Please enter a coordinate: ");
   char coor[3];
   scanf("%s", coor);
+  getchar();
 
   printf("Please enter a destination: ");
   char dest[3];
   scanf("%s", dest);
+  getchar();
 
   printf("Choose a color (Black = -1, White = 1): ");
   int color;
   scanf("%d", &color);
+  getchar();
 
   char movtype[20];
   int validity;
@@ -41,6 +45,10 @@ void InteractiveCheckMovementValidity()
       else if(piece.movset[validity].attk == 0)
       {
         strcpy(movtype, "move");
+      }
+      else
+      {
+        strcpy(movtype, "attack/move");
       }
     }
     else
@@ -61,6 +69,10 @@ void InteractiveCheckMovementValidity()
       else if(piece.movset[validity].attk == 0)
       {
         strcpy(movtype, "move");
+      }
+      else
+      {
+        strcpy(movtype, "attack/move");
       }
     }
     else

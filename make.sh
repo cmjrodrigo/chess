@@ -1,12 +1,11 @@
 #!/bin/bash
 
-cd ./src/cfiles
-gcc *.c -c
-echo "Compiling object files in ./src/cfiles"
-mv *.o ./../..
-cd ../..
-gcc *.o $1
-echo "Linking object files with $1"
-rm *.o
-echo "Removing leftover object files"
-echo "Compilation finished"
+#CHECK FOR TWO ARGUMENTS
+if [ $# -ne 2 ]
+then
+	echo "Usage: ./make c_file output_name"
+	exit 1
+fi
+
+#MAIN PROGRAM
+gcc "$1" ./src/*.c -o "$2"

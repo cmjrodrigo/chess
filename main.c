@@ -1,8 +1,9 @@
-#include "src/headers/pieces.h"
-#include "src/headers/board.h"
+#include "./src/pieces.h"
+#include "./src/board.h"
+#include "./src/game_control.h"
 
 #include <stdio.h>
 
 int main(void){
-  printf("Currently working :)\n");
+	printf("Hello, world\n");
 }

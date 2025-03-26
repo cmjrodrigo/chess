@@ -1,100 +1,44 @@
 #include "board.h"
-#include "pieces.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-#define BOARD(x, y) board[(y * 8) + x] 					//Similar to c++'s "this" for structs
-#define PBOARD(x, y) (*board)[(y * 8) + x]			//Like the one above but for pointers
-
-void printSquareInfo(Square *square){
-	printf("COORDINATE: %s\n", square -> Coordinate);
-	printf("COLOR: %s\n", square -> Color == WHITE ? "White" : "Black");
-	printf("CHECK: %d\n", square -> Check);
-	printf("CURRENT: %c\n", square -> Current == NULL ? '0' : square -> Current -> Type);
-}
-
-Square *board_init(void){
-	
-	//Memory allocation for all squares
-	Square *board = calloc(64, sizeof(Square));
-
+void Board_initialize (Board_t *board){
 	for(int y = 0; y < 8; y++){
 		for(int x = 0; x < 8; x++){
-			BOARD(x, y).Check = 0;
-			BOARD(x, y).Coordinate[0] = 'a' + x;
-			BOARD(x, y).Coordinate[1] = '1' + y;
-			BOARD(x, y).Current = NULL;
-
-			if((x + y + 2) % 2 == 0){
-				BOARD(x, y).Color = BLACK;
-			}
-			else{
-				BOARD(x, y).Color = WHITE;
-			}
+			(*board)[x][y].s_in_check = false;
+			(*board)[x][y].s_coordinate[0] = 'a' + x;
+			(*board)[x][y].s_coordinate[1] = '1' + y;
+			(*board)[x][y].s_coordinate[2] = '\0';
+			(*board)[x][y].s_current_piece = NULL;
 		}
 	}
-
-	return board;
 }
 
-void board_print(Square **board){
+void Board_print(Board_t *board){
+	char *space= "   ";
+	//First X coordinate row
+	printf(" ");
+	for(int x = 0; x < 8; x++){
+		printf("%s%c", space,  'a' + x);
+	}
+	printf("\n\n");
+
 	for(int y = 7; y >= 0; y--){
+		
+		//First Y coordinate row
+		printf("%c", '1' + y);
 		for(int x = 0; x < 8; x++){
-
-			if(x == 0){
-				printf("%c\t", PBOARD(x, y).Coordinate[1]); 
-			}
-
-			//Prints each color if no piece is detected inside a square
-			if(PBOARD(x, y).Current == NULL){
-				printf("%c   ", PBOARD(x, y).Color == WHITE ? '1' : '0');
-			}
-
-			//Prints pieces by their type
-			else{
-				printf("%c   ", PBOARD(x, y).Current -> Type);
-			}
+			if((*board)[x][y].s_current_piece == NULL)
+				printf("%s%c", space, ((x+1) + y) % 2  == 0 ? '+' : 'x');
+			else
+				printf("%s%c", space, (*board)[x][y].s_current_piece -> p_type);
 		}
-		printf("\n\n");
+		//Second Y coorinate row
+		printf("%s%c\n\n", space, '1' + y);
 	}
 
-	//Prints the letter coordinates at the bottom
+	//Second X coordinate row
+	printf(" ");
+	for(int x = 0; x < 8; x++){
+		printf("%s%c", space, 'a' + x);
+	}
 	printf("\n");
-	printf(" \t");
-	for(int i = 'A'; i <= 'H'; i++){
-		printf("%c   ", i);
-	}
-	printf("\n\n");
-	printf("\n\n");
 }
-
-int board_update(Square **board, Piece *piece, char new_position[3]){
-
-	short new_x = new_position[0] - 'a';
-	short new_y = new_position[1] - '1';
-
-	short past_x = piece -> Position[0] - 'a';
-	short past_y = piece -> Position[1] - '1';
-
-	PBOARD(past_x, past_y).Current = NULL;
-	PBOARD(new_x, new_y).Current = piece;
-
-	piece -> Position[0] = new_position[0];
-	piece -> Position[1] = new_position[1];
-
-#ifdef DEBUG
-	printf("New piece position: %s.\n", piece -> Position);
-	printf("Piece info: \n");
-	printPieceInfo(piece);
-	puts("");
-	printf("Square info: \n");
-	printSquareInfo(&(PBOARD(new_x, new_y)));
-	puts("");
-	puts("");
-#endif
-
-	return 1;
-}
-
